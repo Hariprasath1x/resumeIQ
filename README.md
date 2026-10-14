@@ -199,7 +199,7 @@ graph TB
     MongoRepo -->|Job Documents| JobMatcher
     JobMatcher -->|Scored Job Matches| Router
 
-    Router -->>|JSON Response| UI
+    Router -->|JSON Response| UI
     UI -->|3. Click Apply Link| ExternalJobs
 ```
 
