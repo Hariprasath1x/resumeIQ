@@ -593,4 +593,3 @@ ResumeIQ-py/
 ## License & Acknowledgments
 
 - **License:** No formal open-source license has been specified for this repository. All rights are reserved by the repository owner.
-- **Original Project:** Based on the architecture and domain logic of the original Java/Spring Boot `ResumeIQ` project.
