@@ -19,7 +19,8 @@ def _map_mongo_doc_to_job(doc: dict) -> Job:
     job_url = doc.get("job_url") or doc.get("jobUrl") or ""
     application_url = doc.get("application_url") or doc.get("applicationUrl") or job_url
     posted_at = doc.get("posted_at") or doc.get("postedAt")
-    salary_dict = doc.get("salary") if isinstance(doc.get("salary"), dict) else {}
+    raw_salary = doc.get("salary")
+    salary_dict = raw_salary if isinstance(raw_salary, dict) else {}
     salary_min = doc.get("salary_min") or salary_dict.get("min")
     salary_max = doc.get("salary_max") or salary_dict.get("max")
     salary_currency = doc.get("salary_currency") or salary_dict.get("currency") or ""

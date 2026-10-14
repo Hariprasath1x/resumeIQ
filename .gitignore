@@ -13,7 +13,9 @@ secrets/
 firebase-service-account.json
 
 # Python virtual environments & interpreters
+.venv
 .venv/
+venv
 venv/
 ENV/
 env/

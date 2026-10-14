@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import UploadResume from './components/UploadResume';
 import ScoreCard from './components/ScoreCard';
 import ScoreBreakdown from './components/ScoreBreakdown';
@@ -11,6 +11,7 @@ import Suggestions from './components/Suggestions';
 import ErrorBoundary from './components/ErrorBoundary';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
+import Welcome from './pages/Welcome';
 import Profile from './pages/Profile';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { analyzeResume } from './services/api';
@@ -29,6 +30,7 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [loadingStep, setLoadingStep] = useState('');
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleAnalyze = async (file) => {
     setIsLoading(true);
@@ -76,13 +78,13 @@ function Dashboard() {
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>ResumeIQ</h1>
+          <h1 style={{ margin: 0, cursor: 'pointer' }} onClick={() => navigate('/')}>ResumeIQ</h1>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>AI Resume Analyzer &amp; Job Matcher</p>
         </div>
 
         {user && (
           <div
-            onClick={() => window.location.href = '/profile'}
+            onClick={() => navigate('/profile')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', padding: '0.5rem', borderRadius: '8px', transition: 'background-color 0.2s' }}
             onMouseOver={e => e.currentTarget.style.backgroundColor = 'var(--background)'}
             onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}
@@ -186,12 +188,35 @@ function Dashboard() {
   );
 }
 
+function RootRoute() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc' }}>
+        <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #eaf0ff', borderTopColor: '#3f72e4', animation: 'spin 0.8s linear infinite' }} />
+      </div>
+    );
+  }
+  return user ? <Dashboard /> : <Welcome />;
+}
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<RootRoute />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/login" element={<Login initialMode="login" />} />
+          <Route path="/signup" element={<Login initialMode="signup" />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -200,14 +225,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="*" element={<RootRoute />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

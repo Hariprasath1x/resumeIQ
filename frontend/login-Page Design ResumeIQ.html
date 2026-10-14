@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in · ResumeIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #3f72e4;
+    --blue-dark: #3361cc;
+    --blue-pale: #eaf0ff;
+    --bg: #f8fafc;
+    --ink: #111827;
+    --muted: #64748b;
+    --line: #d5dce8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .page {
+    min-height: 100vh; min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+  }
+
+  /* ---------- left: blue side ---------- */
+  .side {
+    background: var(--blue);
+    color: #fff;
+    padding: clamp(28px, 5vh, 56px) clamp(32px, 5vw, 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .side .logo { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+  .side h2 {
+    font-size: clamp(30px, 3.4vw, 46px);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    max-width: 460px;
+  }
+  .side p { margin-top: 14px; font-size: 16.5px; line-height: 1.55; color: #dbe6ff; max-width: 420px; }
+
+  .desk { position: relative; height: clamp(250px, 44vh, 400px); margin: 12px 0; }
+  .sheet {
+    position: absolute; left: 50%; top: 50%;
+    width: min(300px, 62%);
+    aspect-ratio: 3 / 3.9;
+    background: #fff; border-radius: 5px;
+    padding: 22px 22px;
+    box-shadow: 0 6px 18px rgba(10, 30, 90, .25);
+  }
+  .sheet.back { background: var(--blue-pale); transform: translate(-50%, -50%) rotate(7deg) translate(26px, 6px); box-shadow: 0 4px 12px rgba(10,30,90,.18); }
+  .sheet.front { transform: translate(-50%, -50%) rotate(-3deg); }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: #d7dfee; flex: none; }
+  .bar { height: 7px; border-radius: 4px; background: #e3e8f1; }
+  .bar.dark { background: #b8c3d8; }
+  .stack { flex: 1; display: grid; gap: 6px; }
+  .label { height: 8px; width: 34%; background: var(--blue); border-radius: 2px; margin: 16px 0 9px; }
+  .line { margin-bottom: 7px; }
+  .hl { background: #fff0a0; padding: 0; border-radius: 2px; box-shadow: -2px 0 0 #fff0a0, 2px 0 0 #fff0a0; }
+  .stamp {
+    position: absolute; right: -18px; top: -20px;
+    width: 76px; height: 76px; border-radius: 50%;
+    border: 3px solid var(--blue); outline: 2px solid var(--blue); outline-offset: 3px;
+    background: #fff; color: var(--blue);
+    display: grid; place-items: center; text-align: center;
+    transform: rotate(10deg); line-height: 1;
+  }
+  .stamp b { font-size: 24px; font-weight: 800; display: block; }
+  .stamp span { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+  .side .foot { font-size: 13px; color: #b9ccf7; }
+
+  /* ---------- right: form ---------- */
+  .main { display: flex; align-items: center; justify-content: center; padding: 32px 24px; }
+  .form-wrap { width: 100%; max-width: 380px; }
+  .mobile-logo { display: none; font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -.02em; margin-bottom: 28px; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -.025em; }
+  .lead { color: var(--muted); margin-top: 6px; margin-bottom: 28px; font-size: 15.5px; }
+  label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 7px; }
+  .field { margin-bottom: 18px; }
+  input[type=email], input[type=password], input[type=text] {
+    width: 100%; height: 46px; padding: 0 14px;
+    font-family: inherit; font-size: 15.5px; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: 8px;
+    outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #9aa6b8; }
+  input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(63,114,228,.18); }
+  .pw { position: relative; }
+  .pw input { padding-right: 62px; }
+  .pw button {
+    position: absolute; right: 6px; top: 6px; height: 34px; padding: 0 10px;
+    background: none; border: 0; color: var(--blue); font: 600 13px 'Inter', sans-serif; cursor: pointer; border-radius: 6px;
+  }
+  .pw button:hover { background: var(--blue-pale); }
+  .opts { display: flex; justify-content: space-between; align-items: center; margin: 4px 0 22px; font-size: 14px; }
+  .opts label { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 500; color: var(--muted); cursor: pointer; }
+  .opts input { accent-color: var(--blue); width: 16px; height: 16px; }
+  a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  a:hover { text-decoration: underline; }
+  .submit {
+    width: 100%; height: 48px; border: 0; border-radius: 8px;
+    background: var(--blue); color: #fff; font: 600 16px 'Inter', sans-serif; cursor: pointer;
+    transition: background .15s;
+  }
+  .submit:hover { background: var(--blue-dark); }
+  .alt { margin-top: 22px; text-align: center; font-size: 14.5px; color: var(--muted); }
+  .err { display: none; margin-bottom: 16px; font-size: 14px; color: #b42318; background: #fef3f2; border: 1px solid #fecdca; padding: 10px 12px; border-radius: 8px; }
+  .err.show { display: block; }
+
+  @media (max-width: 860px) {
+    .page { grid-template-columns: 1fr; }
+    .side { display: none; }
+    .mobile-logo { display: block; }
+    .main { align-items: flex-start; padding-top: 12vh; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <aside class="side">
+    <div class="logo">ResumeIQ</div>
+
+    <div>
+      <h2>Know how your resume stacks up.</h2>
+      <p>Upload your resume, add a job description, and see where you match and what's missing.</p>
+    </div>
+
+    <div class="desk" aria-hidden="true">
+      <div class="sheet back"></div>
+      <div class="sheet front">
+        <div class="stamp"><div><b>86%</b><span>Match</span></div></div>
+        <div class="row">
+          <div class="avatar"></div>
+          <div class="stack"><div class="bar dark" style="width:62%"></div><div class="bar" style="width:40%"></div></div>
+        </div>
+        <div class="label"></div>
+        <div class="bar line hl" style="width:88%"></div>
+        <div class="bar line" style="width:94%"></div>
+        <div class="bar line" style="width:70%"></div>
+        <div class="label" style="width:28%"></div>
+        <div class="bar line" style="width:92%"></div>
+        <div class="bar line hl" style="width:76%"></div>
+        <div class="bar line" style="width:84%"></div>
+        <div class="label" style="width:22%"></div>
+        <div class="bar line hl" style="width:58%"></div>
+        <div class="bar line" style="width:80%"></div>
+      </div>
+    </div>
+
+    <div class="foot">AI Resume Analyzer &amp; Job Matcher</div>
+  </aside>
+
+  <main class="main">
+    <div class="form-wrap">
+      <div class="mobile-logo">ResumeIQ</div>
+      <h1>Welcome back</h1>
+      <p class="lead">Log in to analyze your resume.</p>
+
+      <div class="err" id="err">Please enter your email and password.</div>
+
+      <form id="login" novalidate>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="pw">
+            <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" id="toggle">Show</button>
+          </div>
+        </div>
+        <div class="opts">
+          <label><input type="checkbox"> Remember me</label>
+          <a href="/forgot-password">Forgot password?</a>
+        </div>
+        <button class="submit" type="submit">Log in</button>
+      </form>
+
+      <p class="alt">New to ResumeIQ? <a href="/signup">Create an account</a></p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const pw = document.getElementById('password');
+  document.getElementById('toggle').addEventListener('click', e => {
+    const show = pw.type === 'password';
+    pw.type = show ? 'text' : 'password';
+    e.target.textContent = show ? 'Hide' : 'Show';
+  });
+
+  document.getElementById('login').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const err = document.getElementById('err');
+    if (!email || !pw.value) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    // TODO: call your login API here
+  });
+</script>
+</body>
+</html>

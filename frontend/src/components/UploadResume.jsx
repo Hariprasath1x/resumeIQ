@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { UploadCloud, FileText, AlertCircle, X } from 'lucide-react';
 
 export default function UploadResume({ onAnalyze, isLoading }) {
   const [file, setFile] = useState(null);

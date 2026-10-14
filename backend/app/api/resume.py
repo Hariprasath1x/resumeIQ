@@ -20,7 +20,7 @@ async def analyze_resume(file: UploadFile = File(...)):
         filename = file.filename.lower() if file.filename else ""
         if filename.endswith(".pdf") or file.content_type == "application/pdf":
             raw_text = pdf_parser.parse_pdf(content)
-        elif filename.endswith(".docx") or "wordprocessingml" in file.content_type:
+        elif filename.endswith(".docx") or (file.content_type and "wordprocessingml" in file.content_type):
             raw_text = docx_parser.parse_docx(content)
         else:
             raise HTTPException(status_code=422, detail="Unsupported file format")

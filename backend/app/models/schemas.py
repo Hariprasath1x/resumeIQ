@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, AliasChoices
 from typing import List, Optional, Any
 
 class ResumeProfile(BaseModel):
@@ -76,7 +76,7 @@ class ImprovementSuggestions(BaseModel):
     general_suggestions: List[str] = []
 
 class Job(BaseModel):
-    id: str = Field(alias="_id", default="")
+    id: str = Field(default="", validation_alias=AliasChoices("_id", "id"))
     title: str = ""
     company: str = ""
     location: str = ""
